@@ -4,7 +4,7 @@ use IEEE.numeric_std.ALL;
 
 entity VGA is
     generic(
-        -- 800x600@60Hz SVGA °Ñ¼Æ (40 MHz pixel clock)
+        -- 800x600@60Hz SVGA åƒæ•¸ (40 MHz pixel clock)
         H_RES   : integer   := 800;
         H_FP    : integer   := 40;
         H_SYNC  : integer   := 128;
@@ -38,7 +38,7 @@ end VGA;
 
 architecture rtl of VGA is
 
-    -- ¤Ş¥Î pingpong ¤¸¥ó
+    -- å¼•ç”¨ pingpong å…ƒä»¶
     component pingpong is
         Port (
             i_clk : in STD_LOGIC;
@@ -80,7 +80,7 @@ begin
     -- but pingpong expects Active-Low (0=Reset).
     pp_rst_n <= not i_rst;
 
-    -- ¹ê¨Ò¤Æ Ping Pong ¹CÀ¸®Ö¤ß
+    -- å¯¦ä¾‹åŒ– Ping Pong éŠæˆ²æ ¸å¿ƒ
     inst_pingpong: pingpong
     port map (
         i_clk => i_clk,
@@ -184,7 +184,7 @@ begin
                 o_green <= (others => '0');
                 o_blue  <= (others => '0');
             elsif pix_ce = '1' then
-                -- ¹w³]­I´º¦â (²`ÂÅ¦â)
+                -- é è¨­èƒŒæ™¯è‰² (æ·±è—è‰²)
                 o_red   <= "0000";
                 o_green <= "0000";
                 o_blue  <= "0010"; 
@@ -193,15 +193,15 @@ begin
                     hit_circle := false;
                     is_led_on  := false;
                     
-                    -- Àu¤Æ¡G¥ıÀË¬d Y ¶b¬O§_¦b¶ê§Î½d³ò¤º¡A´î¤Ö­pºâ¶q
+                    -- å„ªåŒ–ï¼šå…ˆæª¢æŸ¥ Y è»¸æ˜¯å¦åœ¨åœ“å½¢ç¯„åœå…§ï¼Œæ¸›å°‘è¨ˆç®—é‡
                     if abs(v_count - LED_Y) <= LED_RADIUS then
                         
-                        -- ÀË¬d 8 ­Ó LED ªº¦ì¸m
-                        -- §Ú­Ì°²³] LED ±q¥ª¨ì¥k ¹ïÀ³ led_status(7) ¨ì led_status(0)
+                        -- æª¢æŸ¥ 8 å€‹ LED çš„ä½ç½®
+                        -- æˆ‘å€‘å‡è¨­ LED å¾å·¦åˆ°å³ å°æ‡‰ led_status(7) åˆ° led_status(0)
                         for k in 0 to 7 loop
                             center_x := LED_START_X + k * LED_GAP;
                             
-                            -- ÀË¬d X ¶b½d³ò (BBox check)
+                            -- æª¢æŸ¥ X è»¸ç¯„åœ (BBox check)
                             if abs(h_count - center_x) <= LED_RADIUS then
                                 dx := h_count - center_x;
                                 dy := v_count - LED_Y;
@@ -210,7 +210,7 @@ begin
                                 if dist2 <= rad2 then
                                     hit_circle := true;
                                     
-                                    -- ¹ïÀ³ logic vector: ¿Ã¹õ¥ªÃä(k=0)¹ïÀ³ Bit 7
+                                    -- å°æ‡‰ logic vector: è¢å¹•å·¦é‚Š(k=0)å°æ‡‰ Bit 7
                                     current_bit := led_status(7 - k);
                                     
                                     if current_bit = '1' then
@@ -219,7 +219,7 @@ begin
                                         is_led_on := false;
                                     end if;
                                     
-                                    -- §ä¨ì¤@­Ó¶ê´N¤£¥ÎÄ~ÄòÀË¬d¨ä¥Lªº¤F (¦]¬°¶ê¤£­«Å|)
+                                    -- æ‰¾åˆ°ä¸€å€‹åœ“å°±ä¸ç”¨ç¹¼çºŒæª¢æŸ¥å…¶ä»–çš„äº† (å› ç‚ºåœ“ä¸é‡ç–Š)
                                     exit; 
                                 end if;
                             end if;
@@ -227,12 +227,12 @@ begin
                         
                         if hit_circle then
                             if is_led_on then
-                                -- «G¿OÃC¦â («G¶À¦â/¬õ¦â)
+                                -- äº®ç‡ˆé¡è‰² (äº®é»ƒè‰²/ç´…è‰²)
                                 o_red   <= "1111";
                                 o_green <= "1111";
                                 o_blue  <= "0000";
                             else
-                                -- ·À¿OÃC¦â (·t¦Ç¦â®Ø½u©Î¶ñ¥R)
+                                -- æ»…ç‡ˆé¡è‰² (æš—ç°è‰²æ¡†ç·šæˆ–å¡«å……)
                                 o_red   <= "0010";
                                 o_green <= "0010";
                                 o_blue  <= "0010";
@@ -240,7 +240,7 @@ begin
                         end if;
                     end if; -- Y check
                 else
-                    -- Blanking Interval (¶Âµe­±)
+                    -- Blanking Interval (é»‘ç•«é¢)
                     o_red   <= (others => '0');
                     o_green <= (others => '0');
                     o_blue  <= (others => '0');
